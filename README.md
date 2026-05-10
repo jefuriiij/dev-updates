@@ -12,51 +12,19 @@ When triggered, it scans your working tree for uncommitted changes, groups them 
 
 ## Installation
 
-### Claude Code
+Works with **Claude Code**, **Codex CLI**, and **Gemini CLI**. The script auto-detects which tools you have installed.
 
 **macOS / Linux**
 ```bash
-mkdir -p ~/.claude/skills/dev-updates && curl -sLo ~/.claude/skills/dev-updates/SKILL.md https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md
+curl -sL https://raw.githubusercontent.com/jefuriiij/dev-updates/main/install.sh | bash
 ```
 
 **Windows (PowerShell)**
 ```powershell
-mkdir -Force "$env:USERPROFILE\.claude\skills\dev-updates"
-irm https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md -OutFile "$env:USERPROFILE\.claude\skills\dev-updates\SKILL.md"
+irm https://raw.githubusercontent.com/jefuriiij/dev-updates/main/install.ps1 | iex
 ```
 
----
-
-### Codex CLI
-
-Appends the skill to your global Codex instructions so it's always available.
-
-**macOS / Linux**
-```bash
-curl -sL https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md >> ~/.codex/instructions.md
-```
-
-**Windows (PowerShell)**
-```powershell
-irm https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md >> "$env:USERPROFILE\.codex\instructions.md"
-```
-
----
-
-### Gemini CLI
-
-Appends the skill to your global Gemini instructions so it's always available.
-
-**macOS / Linux**
-```bash
-mkdir -p ~/.gemini && curl -sL https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md >> ~/.gemini/GEMINI.md
-```
-
-**Windows (PowerShell)**
-```powershell
-mkdir -Force "$env:USERPROFILE\.gemini"
-irm https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md >> "$env:USERPROFILE\.gemini\GEMINI.md"
-```
+Same command works for updating too — just re-run it anytime to get the latest version.
 
 ---
 
