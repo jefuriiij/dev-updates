@@ -1,52 +1,27 @@
 $ErrorActionPreference = "Stop"
 
-$SkillUrl = "https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md"
-$MarkerStart = "<!-- dev-updates:start -->"
-$MarkerEnd = "<!-- dev-updates:end -->"
+$BaseUrl = "https://raw.githubusercontent.com/jefuriiij/dev-updates/main"
 
 Write-Host "dev-updates installer"
 Write-Host "---------------------"
 
-$SkillContent = (Invoke-RestMethod -Uri $SkillUrl)
-
-function Install-Claude {
-  $dir = "$env:USERPROFILE\.claude\skills\dev-updates"
-  New-Item -ItemType Directory -Force $dir | Out-Null
-  Set-Content "$dir\SKILL.md" $SkillContent -Encoding utf8
-  Write-Host "✓ Claude Code updated"
-}
-
-function Upsert-ToFile {
-  param($File, $Tool)
-  New-Item -ItemType Directory -Force (Split-Path $File) | Out-Null
-  if (-not (Test-Path $File)) { New-Item -ItemType File -Force $File | Out-Null }
-
-  $content = Get-Content $File -Raw -ErrorAction SilentlyContinue
-  if ($content -and $content.Contains($MarkerStart)) {
-    $escaped_start = [regex]::Escape($MarkerStart)
-    $escaped_end = [regex]::Escape($MarkerEnd)
-    $content = $content -replace "(?s)\r?\n?$escaped_start.*?$escaped_end\r?\n?", ""
-    Set-Content $File $content -Encoding utf8
-  }
-
-  Add-Content $File "`n$MarkerStart`n$SkillContent`n$MarkerEnd" -Encoding utf8
+function Install-To {
+  param($Dir, $Tool)
+  New-Item -ItemType Directory -Force "$Dir\agents" | Out-Null
+  irm "$BaseUrl/SKILL.md" -OutFile "$Dir\SKILL.md"
+  irm "$BaseUrl/agents/openai.yaml" -OutFile "$Dir\agents\openai.yaml"
   Write-Host "✓ $Tool updated"
 }
 
 $found = $false
 
 if (Test-Path "$env:USERPROFILE\.claude") {
-  Install-Claude
+  Install-To "$env:USERPROFILE\.claude\skills\dev-updates" "Claude Code"
   $found = $true
 }
 
-if ((Test-Path "$env:USERPROFILE\.codex") -or (Get-Command codex -ErrorAction SilentlyContinue)) {
-  Upsert-ToFile "$env:USERPROFILE\.codex\instructions.md" "Codex CLI"
-  $found = $true
-}
-
-if ((Test-Path "$env:USERPROFILE\.gemini") -or (Get-Command gemini -ErrorAction SilentlyContinue)) {
-  Upsert-ToFile "$env:USERPROFILE\.gemini\GEMINI.md" "Gemini CLI"
+if ((Test-Path "$env:USERPROFILE\.agents\skills") -or (Test-Path "$env:USERPROFILE\.codex") -or (Get-Command codex -ErrorAction SilentlyContinue)) {
+  Install-To "$env:USERPROFILE\.agents\skills\dev-updates" "Codex CLI / Gemini CLI"
   $found = $true
 }
 

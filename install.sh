@@ -1,50 +1,29 @@
 #!/bin/bash
 set -e
 
-SKILL_URL="https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md"
-MARKER_START="<!-- dev-updates:start -->"
-MARKER_END="<!-- dev-updates:end -->"
+BASE_URL="https://raw.githubusercontent.com/jefuriiij/dev-updates/main"
 
 echo "dev-updates installer"
 echo "---------------------"
 
-SKILL_CONTENT=$(curl -sL "$SKILL_URL")
-
-install_claude() {
-  local DIR="$HOME/.claude/skills/dev-updates"
-  mkdir -p "$DIR"
-  echo "$SKILL_CONTENT" > "$DIR/SKILL.md"
-  echo "✓ Claude Code updated"
-}
-
-upsert_to_file() {
-  local FILE="$1"
+install_to() {
+  local DIR="$1"
   local TOOL="$2"
-  mkdir -p "$(dirname "$FILE")"
-  touch "$FILE"
-
-  if grep -q "$MARKER_START" "$FILE" 2>/dev/null; then
-    awk "/$MARKER_START/{found=1} !found{print} /$MARKER_END/{found=0}" "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
-  fi
-
-  printf "\n%s\n%s\n%s\n" "$MARKER_START" "$SKILL_CONTENT" "$MARKER_END" >> "$FILE"
+  mkdir -p "$DIR/agents"
+  curl -sLo "$DIR/SKILL.md" "$BASE_URL/SKILL.md"
+  curl -sLo "$DIR/agents/openai.yaml" "$BASE_URL/agents/openai.yaml"
   echo "✓ $TOOL updated"
 }
 
 FOUND=0
 
 if [ -d "$HOME/.claude" ]; then
-  install_claude
+  install_to "$HOME/.claude/skills/dev-updates" "Claude Code"
   FOUND=1
 fi
 
-if [ -d "$HOME/.codex" ] || command -v codex &>/dev/null; then
-  upsert_to_file "$HOME/.codex/instructions.md" "Codex CLI"
-  FOUND=1
-fi
-
-if [ -d "$HOME/.gemini" ] || command -v gemini &>/dev/null; then
-  upsert_to_file "$HOME/.gemini/GEMINI.md" "Gemini CLI"
+if [ -d "$HOME/.agents/skills" ] || [ -d "$HOME/.codex" ] || command -v codex &>/dev/null; then
+  install_to "$HOME/.agents/skills/dev-updates" "Codex CLI / Gemini CLI"
   FOUND=1
 fi
 

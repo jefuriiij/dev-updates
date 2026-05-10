@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dev Updates"
+  short_description: "Summarize git changes and generate commit messages"
+  default_prompt: "Use $dev-updates to summarize my uncommitted changes."

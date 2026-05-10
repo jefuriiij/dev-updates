@@ -1,3 +1,10 @@
+---
+name: dev-updates
+description: Detect and summarize uncommitted git changes grouped by feature area, then generate a structured commit message. Use when the user says "what's the update?", "what changed?", "summarize my changes", "what have I done?", or "what did I update?".
+user-invocable: true
+argument-hint: "[repo path]"
+---
+
 # dev-updates
 
 Detect and summarize uncommitted working tree changes in a git repository. Use this to generate feature update notes and commit messages.
