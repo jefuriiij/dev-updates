@@ -1,48 +1,68 @@
 # dev-updates
 
-A Claude Code skill that detects uncommitted git changes and generates structured commit messages grouped by feature area.
+Detects uncommitted git changes and generates structured commit messages grouped by feature area. Works with Claude Code, Codex CLI, and Gemini CLI.
 
 ## What it does
 
-When triggered, the skill scans your working tree for uncommitted changes, groups them by feature or area, and produces:
+When triggered, it scans your working tree for uncommitted changes, groups them by feature or area, and produces:
 
 - A plain-language summary of what changed and why it matters
 - A one-line commit message ready to paste into `git commit -m "..."`
 - A full detailed commit command with per-change bullet points using multiple `-m` flags
 
-## Prerequisites
-
-- [Claude Code](https://claude.ai/code) installed and running
-
 ## Installation
 
-### macOS / Linux
+### Claude Code
 
+**macOS / Linux**
 ```bash
-mkdir -p ~/.claude/skills/dev-updates
-curl -o ~/.claude/skills/dev-updates/SKILL.md \
-  https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md
+mkdir -p ~/.claude/skills/dev-updates && curl -sLo ~/.claude/skills/dev-updates/SKILL.md https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md
 ```
 
-Or manually:
-1. Create the folder `~/.claude/skills/dev-updates/`
-2. Copy `SKILL.md` into it
-
-### Windows
-
+**Windows (PowerShell)**
 ```powershell
-New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills\dev-updates"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md" `
-  -OutFile "$env:USERPROFILE\.claude\skills\dev-updates\SKILL.md"
+mkdir -Force "$env:USERPROFILE\.claude\skills\dev-updates"
+irm https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md -OutFile "$env:USERPROFILE\.claude\skills\dev-updates\SKILL.md"
 ```
 
-Or manually:
-1. Create the folder `%USERPROFILE%\.claude\skills\dev-updates\`
-2. Copy `SKILL.md` into it
+---
+
+### Codex CLI
+
+Appends the skill to your global Codex instructions so it's always available.
+
+**macOS / Linux**
+```bash
+curl -sL https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md >> ~/.codex/instructions.md
+```
+
+**Windows (PowerShell)**
+```powershell
+irm https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md >> "$env:USERPROFILE\.codex\instructions.md"
+```
+
+---
+
+### Gemini CLI
+
+Appends the skill to your global Gemini instructions so it's always available.
+
+**macOS / Linux**
+```bash
+mkdir -p ~/.gemini && curl -sL https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md >> ~/.gemini/GEMINI.md
+```
+
+**Windows (PowerShell)**
+```powershell
+mkdir -Force "$env:USERPROFILE\.gemini"
+irm https://raw.githubusercontent.com/jefuriiij/dev-updates/main/SKILL.md >> "$env:USERPROFILE\.gemini\GEMINI.md"
+```
+
+---
 
 ## Trigger phrases
 
-Say any of these inside Claude Code to activate the skill:
+Say any of these to activate:
 
 - `what's the update?`
 - `what changed?`
@@ -79,12 +99,7 @@ git commit -m "feat(scope): short summary" -m "- Change one detail" -m "- Change
 
 **Example:**
 ```
-git commit -m "feat(notes): add heatmap, toggle pill, ZentraToggle, heatmap_calendar dep" \
-  -m "- Add 30-day activity heatmap to home screen to track writing streaks" \
-  -m "- Replace flat layout with animated toggle pill + swipe gesture for cleaner navigation" \
-  -m "- Add activityDataProvider to compute daily note activity from timestamps" \
-  -m "- Replace Flutter Switch with custom ZentraToggle matching design system" \
-  -m "- Add flutter_heatmap_calendar dependency"
+git commit -m "feat(landing): add hero section, dark mode toggle, pricing cards, mobile nav" -m "- Add animated hero section with headline, subtext, and CTA button" -m "- Add dark mode toggle with smooth transition and localStorage persistence" -m "- Add responsive pricing cards with highlighted recommended tier" -m "- Fix mobile nav collapsing and add hamburger menu with slide-down animation"
 ```
 
 ## License
