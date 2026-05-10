@@ -2,6 +2,16 @@
 
 Detects uncommitted git changes and generates structured commit messages grouped by feature area. Works with Claude Code, Codex CLI, and Gemini CLI.
 
+## The problem
+
+You've been coding for hours. You can pull up the diff anytime — that part's easy. But when your changes start stacking up, the *why* gets blurry fast.
+
+Why did you add that function? What was that update fixing? How does this new piece connect to the rest of the code? You made those decisions in the moment, but by the time you're ready to commit, that context is already fading. The longer the session, the worse it gets.
+
+Writing a proper commit message means reconstructing all of that — re-reading your own changes, re-tracing your own logic, and then summarizing it clearly. That takes time, and it's easy to just give up and write `"updates"` or `"fix stuff"` instead.
+
+This skill was built to close that gap. It reads your actual diff, figures out what changed and why it matters, groups everything by feature, and generates a commit message that actually describes the work — so you don't have to.
+
 ## What it does
 
 When triggered, it scans your working tree for uncommitted changes, groups them by feature or area, and produces:
