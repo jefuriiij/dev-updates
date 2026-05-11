@@ -24,14 +24,7 @@ Activate when the user says things like:
 - If not in memory, ask: "Which project directory should I check for changes?"
 - Save the path to memory for future use
 
-### 2. Validate git
-Run:
-```
-git -C "<repo_path>" rev-parse --is-inside-work-tree
-```
-If this fails → show the **No git repo** response below and stop.
-
-### 3. Get the changes
+### 2. Get the changes
 Run these commands:
 ```
 git -C "<repo_path>" status --short
@@ -41,11 +34,12 @@ git -C "<repo_path>" diff --cached --stat
 git -C "<repo_path>" diff --cached
 git -C "<repo_path>" ls-files --others --exclude-standard
 ```
+If `git status --short` fails with an error → show the **No git repo** response below and stop.
 
-### 4. Check if anything changed
-If `git status --short` is empty → respond: "Working tree is clean — nothing to commit."
+### 3. Check if anything changed
+If `git status --short` succeeds but is empty → respond: "Working tree is clean — nothing to commit."
 
-### 5. Summarize and present
+### 4. Summarize and present
 - Group changes by feature or area (not just by file)
 - Explain in plain language what each change does
 - List new files, modified files, and deleted files separately
